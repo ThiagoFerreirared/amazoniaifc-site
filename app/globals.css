@@ -1,0 +1,47 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --header-h: 132px;
+}
+
+@layer base {
+  html {
+    scroll-behavior: smooth;
+  }
+  body {
+    @apply bg-amazonia-sand text-amazonia-ink font-sans antialiased;
+  }
+  h1, h2, h3, .font-display {
+    letter-spacing: 0.01em;
+  }
+}
+
+@layer components {
+  .btn-gold {
+    @apply inline-flex items-center justify-center gap-2 rounded-md bg-amazonia-gold px-5 py-3
+           font-semibold text-amazonia-ink transition-all duration-200
+           hover:bg-amazonia-gold-bright hover:shadow-lg active:scale-[0.98];
+  }
+  .btn-outline {
+    @apply inline-flex items-center justify-center gap-2 rounded-md border border-amazonia-green
+           px-5 py-3 font-semibold text-amazonia-green transition-colors duration-200
+           hover:bg-amazonia-green hover:text-white;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .animate-marquee {
+    animation: none !important;
+  }
+}
+
+/* Esconde a scrollbar nas trilhas de carrossel/horizontais */
+.no-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+.no-scrollbar {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}

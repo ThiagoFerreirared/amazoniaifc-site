@@ -1,0 +1,14 @@
+{
+  "permissions": {
+    "allow": [
+      "PowerShell(Get-ChildItem -Force -Path \"C:\\\\Users\\\\red_bala\\\\Desktop\\\\amazoniaifc_site\" | Select-Object Mode, Length, Name | Format-Table -AutoSize; Write-Output \"---ITEM COUNT---\"; \\(Get-ChildItem -Force -Path \"C:\\\\Users\\\\red_bala\\\\Desktop\\\\amazoniaifc_site\" | Measure-Object\\).Count)",
+      "Bash(python -c ' *)",
+      "WebFetch(domain:www.instagram.com)",
+      "Bash(python -)",
+      "WebSearch",
+      "WebFetch(domain:docs.google.com)",
+      "WebFetch(domain:en.wikipedia.org)",
+      "WebFetch(domain:www.sofutebolbrasil.com)"
+    ]
+  }
+}
