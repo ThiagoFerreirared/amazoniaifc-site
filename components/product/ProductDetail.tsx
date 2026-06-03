@@ -18,12 +18,13 @@ import { SizeChartModal } from "./SizeChart";
 import { Price } from "@/components/ui/Price";
 import { DiscountTag } from "@/components/ui/DiscountTag";
 import { Button } from "@/components/ui/Button";
-import { emitAddToCart } from "@/lib/cart-events";
+import { useCart } from "@/components/cart/CartProvider";
 import { PERSONALIZATION_PRICE, isPersonalized } from "@/lib/cart";
 import { discountPercent, formatBRL } from "@/lib/format";
 import { LINE_LABELS, type Product } from "@/lib/types";
 
 export function ProductDetail({ product }: { product: Product }) {
+  const { addItem } = useCart();
   const sizes = product.sizes ?? [];
   const hasRealSizes = sizes.length > 0 && !(sizes.length === 1 && sizes[0] === "Único");
   const canPersonalize = product.line === "linha-de-jogo";
@@ -51,7 +52,7 @@ export function ProductDetail({ product }: { product: Product }) {
       return;
     }
     setError(null);
-    emitAddToCart({
+    addItem({
       product,
       qty,
       size: size ?? undefined,
