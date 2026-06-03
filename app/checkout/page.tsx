@@ -1,12 +1,7 @@
-import { ComingSoon } from "@/components/ui/ComingSoon";
+import { CheckoutFlow } from "@/components/checkout/CheckoutFlow";
 
 export const metadata = { title: "Checkout" };
 
 export default function CheckoutPage() {
-  return (
-    <ComingSoon
-      title="Checkout"
-      description="O fluxo em etapas (Login/Cadastro, Endereço, Resumo e Pagamento com Pix e Cartão) será construído nas próximas fases."
-    />
-  );
+  return <CheckoutFlow />;
 }

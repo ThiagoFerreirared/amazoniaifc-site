@@ -5,11 +5,12 @@ import { ShoppingBag } from "lucide-react";
 import { ProductGlyph } from "./ProductMedia";
 import { Price } from "@/components/ui/Price";
 import { DiscountTag } from "@/components/ui/DiscountTag";
-import { emitAddToCart } from "@/lib/cart-events";
+import { useCart } from "@/components/cart/CartProvider";
 import { discountPercent } from "@/lib/format";
 import { LINE_LABELS, type Product } from "@/lib/types";
 
 export function ProductCard({ product }: { product: Product }) {
+  const { addItem } = useCart();
   const off = discountPercent(product.price, product.compareAtPrice);
   const isLancamento = product.badges.includes("lancamento");
   const href = `/produto/${product.slug}`;
@@ -48,7 +49,7 @@ export function ProductCard({ product }: { product: Product }) {
 
         <button
           type="button"
-          onClick={() => emitAddToCart({ product, qty: 1 })}
+          onClick={() => addItem({ product, qty: 1 })}
           className="mt-4 inline-flex w-full items-center justify-center gap-2 rounded-md border border-amazonia-green/30 bg-amazonia-green/5 py-2.5 text-sm font-semibold text-amazonia-green transition-colors duration-200 hover:border-amazonia-gold hover:bg-amazonia-gold hover:text-amazonia-ink"
         >
           <ShoppingBag className="h-4 w-4" />

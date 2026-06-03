@@ -1,32 +1,18 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import Link from "next/link";
 import { Menu, PawPrint, ShoppingBag, User, X } from "lucide-react";
 import { Topbar } from "./Topbar";
 import { SearchBar } from "./SearchBar";
 import { MainNav } from "./MainNav";
 import { MiniCart } from "@/components/cart/MiniCart";
-import { CART_ADD_EVENT } from "@/lib/cart-events";
-import { cartCount } from "@/lib/cart";
-import { LINES, LINE_LABELS, type CartItem } from "@/lib/types";
+import { useCart } from "@/components/cart/CartProvider";
+import { LINES, LINE_LABELS } from "@/lib/types";
 
 export function Header() {
-  const [cartOpen, setCartOpen] = useState(false);
   const [mobileOpen, setMobileOpen] = useState(false);
-  const [items, setItems] = useState<CartItem[]>([]);
-
-  useEffect(() => {
-    function onAdd(e: Event) {
-      const item = (e as CustomEvent<CartItem>).detail;
-      setItems((prev) => [...prev, item]);
-      setCartOpen(true);
-    }
-    window.addEventListener(CART_ADD_EVENT, onAdd as EventListener);
-    return () => window.removeEventListener(CART_ADD_EVENT, onAdd as EventListener);
-  }, []);
-
-  const count = cartCount(items);
+  const { items, count, isOpen, openCart, closeCart, removeItem } = useCart();
 
   return (
     <header className="sticky top-0 z-50 shadow-sm">
@@ -73,7 +59,7 @@ export function Header() {
             </Link>
 
             <button
-              onClick={() => setCartOpen(true)}
+              onClick={openCart}
               className="relative rounded-md px-2 py-2 hover:bg-black/5"
               aria-label="Abrir carrinho"
             >
@@ -118,12 +104,7 @@ export function Header() {
         </nav>
       ) : null}
 
-      <MiniCart
-        open={cartOpen}
-        items={items}
-        onClose={() => setCartOpen(false)}
-        onRemove={(i) => setItems((prev) => prev.filter((_, idx) => idx !== i))}
-      />
+      <MiniCart open={isOpen} items={items} onClose={closeCart} onRemove={removeItem} />
     </header>
   );
 }
