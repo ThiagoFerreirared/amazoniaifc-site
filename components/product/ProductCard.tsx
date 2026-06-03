@@ -1,38 +1,13 @@
 "use client";
 
 import Link from "next/link";
-import { clsx } from "clsx";
-import { Shield, Shirt, ShoppingBag } from "lucide-react";
+import { ShoppingBag } from "lucide-react";
+import { ProductGlyph } from "./ProductMedia";
 import { Price } from "@/components/ui/Price";
 import { DiscountTag } from "@/components/ui/DiscountTag";
 import { emitAddToCart } from "@/lib/cart-events";
 import { discountPercent } from "@/lib/format";
-import { LINE_LABELS, type Product, type Swatch } from "@/lib/types";
-
-const swatchStyles: Record<Swatch, { wrap: string; icon: string }> = {
-  green: { wrap: "from-amazonia-green to-amazonia-green-dark", icon: "text-white/90" },
-  white: { wrap: "from-white to-zinc-200 ring-1 ring-inset ring-zinc-200", icon: "text-amazonia-green" },
-  gold: { wrap: "from-amazonia-gold to-amazonia-gold-bright", icon: "text-amazonia-ink" },
-  graphite: { wrap: "from-zinc-700 to-amazonia-black", icon: "text-amazonia-gold" },
-};
-
-function ProductGlyph({ product }: { product: Product }) {
-  const Icon = product.line === "acessorios" ? Shield : Shirt;
-  const s = swatchStyles[product.swatch];
-  return (
-    <div
-      className={clsx(
-        "relative flex aspect-square w-full items-center justify-center bg-gradient-to-br",
-        s.wrap,
-      )}
-    >
-      <Icon className={clsx("h-20 w-20 opacity-90", s.icon)} strokeWidth={1.25} />
-      <span className="pointer-events-none absolute bottom-3 select-none font-display text-[11px] uppercase tracking-[0.25em] text-current opacity-30">
-        Amazônia
-      </span>
-    </div>
-  );
-}
+import { LINE_LABELS, type Product } from "@/lib/types";
 
 export function ProductCard({ product }: { product: Product }) {
   const off = discountPercent(product.price, product.compareAtPrice);
@@ -73,7 +48,7 @@ export function ProductCard({ product }: { product: Product }) {
 
         <button
           type="button"
-          onClick={() => emitAddToCart(product)}
+          onClick={() => emitAddToCart({ product, qty: 1 })}
           className="mt-4 inline-flex w-full items-center justify-center gap-2 rounded-md border border-amazonia-green/30 bg-amazonia-green/5 py-2.5 text-sm font-semibold text-amazonia-green transition-colors duration-200 hover:border-amazonia-gold hover:bg-amazonia-gold hover:text-amazonia-ink"
         >
           <ShoppingBag className="h-4 w-4" />

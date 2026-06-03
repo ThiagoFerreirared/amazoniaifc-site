@@ -8,24 +8,25 @@ import { SearchBar } from "./SearchBar";
 import { MainNav } from "./MainNav";
 import { MiniCart } from "@/components/cart/MiniCart";
 import { CART_ADD_EVENT } from "@/lib/cart-events";
-import { LINES, LINE_LABELS, type Product } from "@/lib/types";
+import { cartCount } from "@/lib/cart";
+import { LINES, LINE_LABELS, type CartItem } from "@/lib/types";
 
 export function Header() {
   const [cartOpen, setCartOpen] = useState(false);
   const [mobileOpen, setMobileOpen] = useState(false);
-  const [items, setItems] = useState<Product[]>([]);
+  const [items, setItems] = useState<CartItem[]>([]);
 
   useEffect(() => {
     function onAdd(e: Event) {
-      const product = (e as CustomEvent<Product>).detail;
-      setItems((prev) => [...prev, product]);
+      const item = (e as CustomEvent<CartItem>).detail;
+      setItems((prev) => [...prev, item]);
       setCartOpen(true);
     }
     window.addEventListener(CART_ADD_EVENT, onAdd as EventListener);
     return () => window.removeEventListener(CART_ADD_EVENT, onAdd as EventListener);
   }, []);
 
-  const count = items.length;
+  const count = cartCount(items);
 
   return (
     <header className="sticky top-0 z-50 shadow-sm">

@@ -3,19 +3,21 @@
 import Link from "next/link";
 import { clsx } from "clsx";
 import { ShoppingBag, Trash2, X } from "lucide-react";
+import { productIcon, swatchStyles } from "@/components/product/ProductMedia";
 import { Button } from "@/components/ui/Button";
+import { cartSubtotal, lineUnitPrice } from "@/lib/cart";
 import { formatBRL } from "@/lib/format";
-import type { Product } from "@/lib/types";
+import type { CartItem } from "@/lib/types";
 
 interface MiniCartProps {
   open: boolean;
-  items: Product[];
+  items: CartItem[];
   onClose: () => void;
   onRemove: (index: number) => void;
 }
 
 export function MiniCart({ open, items, onClose, onRemove }: MiniCartProps) {
-  const subtotal = items.reduce((sum, p) => sum + p.price, 0);
+  const subtotal = cartSubtotal(items);
 
   return (
     <>
@@ -54,24 +56,45 @@ export function MiniCart({ open, items, onClose, onRemove }: MiniCartProps) {
             </div>
           ) : (
             <ul className="flex flex-col gap-3">
-              {items.map((p, i) => (
-                <li key={`${p.id}-${i}`} className="flex items-center gap-3 rounded-lg border border-black/5 p-3">
-                  <div className="grid h-12 w-12 shrink-0 place-items-center rounded-md bg-amazonia-green/10 text-amazonia-green">
-                    <ShoppingBag className="h-5 w-5" />
-                  </div>
-                  <div className="min-w-0 flex-1">
-                    <p className="truncate text-sm font-semibold text-amazonia-ink">{p.name}</p>
-                    <p className="text-sm text-amazonia-green">{formatBRL(p.price)}</p>
-                  </div>
-                  <button
-                    onClick={() => onRemove(i)}
-                    aria-label={`Remover ${p.name}`}
-                    className="rounded p-1.5 text-zinc-400 hover:bg-red-50 hover:text-red-500"
-                  >
-                    <Trash2 className="h-4 w-4" />
-                  </button>
-                </li>
-              ))}
+              {items.map((item, i) => {
+                const s = swatchStyles[item.product.swatch];
+                const Icon = productIcon(item.product);
+                const perso = item.personalization;
+                return (
+                  <li key={`${item.product.id}-${i}`} className="flex gap-3 rounded-lg border border-black/5 p-3">
+                    <div className={clsx("grid h-14 w-14 shrink-0 place-items-center rounded-md bg-gradient-to-br", s.wrap)}>
+                      <Icon className={clsx("h-6 w-6", s.icon)} />
+                    </div>
+                    <div className="min-w-0 flex-1">
+                      <p className="truncate text-sm font-semibold text-amazonia-ink">
+                        {item.product.name}
+                      </p>
+                      <p className="text-xs text-zinc-500">
+                        {item.size ? `Tam: ${item.size}` : null}
+                        {item.size ? " · " : null}
+                        {item.qty}x
+                      </p>
+                      {perso && (perso.name || perso.number) ? (
+                        <p className="truncate text-xs text-amazonia-green">
+                          {perso.name ? perso.name : null}
+                          {perso.name && perso.number ? " · " : null}
+                          {perso.number ? `Nº ${perso.number}` : null}
+                        </p>
+                      ) : null}
+                      <p className="mt-0.5 text-sm font-semibold text-amazonia-green">
+                        {formatBRL(lineUnitPrice(item) * item.qty)}
+                      </p>
+                    </div>
+                    <button
+                      onClick={() => onRemove(i)}
+                      aria-label={`Remover ${item.product.name}`}
+                      className="h-fit rounded p-1.5 text-zinc-400 hover:bg-red-50 hover:text-red-500"
+                    >
+                      <Trash2 className="h-4 w-4" />
+                    </button>
+                  </li>
+                );
+              })}
             </ul>
           )}
         </div>
